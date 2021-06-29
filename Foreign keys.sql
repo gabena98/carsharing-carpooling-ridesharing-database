@@ -1,0 +1,117 @@
+SET NAMES latin1;
+USE `carsharing`;
+SET FOREIGN_KEY_CHECKS = 1;
+SET GLOBAL EVENT_SCHEDULER = ON;
+
+ALTER TABLE `utente`
+	ADD FOREIGN KEY(`CodFiscale`) REFERENCES `account`(`CodFiscale`)
+		ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `documento`
+	ADD FOREIGN KEY(`CodFiscale`) REFERENCES `utente`(`CodFiscale`)
+		ON DELETE CASCADE ON UPDATE NO ACTION;
+	
+ALTER TABLE `fruitore`
+	ADD FOREIGN KEY(`CodFiscale`) REFERENCES `utente`(`CodFiscale`)
+		ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `valutazione`
+	ADD FOREIGN KEY(`CodFiscale`) REFERENCES `utente`(`CodFiscale`)
+		ON DELETE CASCADE ON UPDATE CASCADE,
+	ADD FOREIGN KEY(`CodiceTragitto`) REFERENCES `tragitto`(`CodiceTragitto`)
+		ON DELETE NO ACTION ON UPDATE CASCADE;
+    
+ALTER TABLE `optional`
+	ADD FOREIGN KEY(`Targa`) REFERENCES `autovettura`(`Targa`)
+		ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `prenotazionen`
+	ADD FOREIGN KEY(`IDNoleggio`) REFERENCES `noleggio`(`IDNoleggio`)
+ 		ON DELETE CASCADE ON UPDATE CASCADE,
+	ADD FOREIGN KEY(`CodiceFruitore`) REFERENCES `fruitore`(`CodiceFruitore`)
+		ON DELETE NO ACTION ON UPDATE CASCADE;
+
+ALTER TABLE `noleggio`
+	ADD FOREIGN KEY(`Targa`) REFERENCES `autovettura`(`Targa`)
+		ON DELETE NO ACTION ON UPDATE CASCADE,
+	ADD FOREIGN KEY(`CodiceTragitto`) REFERENCES `Tragitto`(`CodiceTragitto`)
+		ON DELETE NO ACTION ON UPDATE CASCADE;
+        
+ ALTER TABLE `autocoinvolta`
+  	ADD FOREIGN KEY(`IDNoleggio`, `Timestamp`) REFERENCES `incidente`(`IDNoleggio`, `Timestamp`)
+  		ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `ridesharing`
+	ADD FOREIGN KEY(`CodiceTragitto`) REFERENCES `tragitto`(`CodiceTragitto`)
+		ON DELETE NO ACTION ON UPDATE CASCADE,
+	ADD FOREIGN KEY(`Targa`) REFERENCES `autovettura`(`Targa`)
+		ON DELETE NO ACTION ON UPDATE CASCADE;
+
+ALTER TABLE `corsasharing`
+	ADD FOREIGN KEY(`Codice`) REFERENCES `chiamatasharing`(`Codice`)
+		ON DELETE CASCADE ON UPDATE CASCADE,
+	ADD FOREIGN KEY(`IDSharing`) REFERENCES `ridesharing`(`IDSharing`)
+		ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `fasciaoraria`
+	ADD FOREIGN KEY(`Targa`) REFERENCES `autovettura`(`Targa`)
+		ON DELETE CASCADE ON UPDATE CASCADE;    
+
+ALTER TABLE `pool`
+	ADD FOREIGN KEY(`CodiceProponente`) REFERENCES `proponente`(`CodiceProponente`)
+		ON DELETE CASCADE ON UPDATE CASCADE,
+	ADD FOREIGN KEY(`CodiceTragitto`) REFERENCES `tragitto`(`CodiceTragitto`)
+		ON DELETE CASCADE ON UPDATE CASCADE,
+	ADD FOREIGN KEY(`Targa`) REFERENCES `autovettura`(`Targa`)
+		ON DELETE CASCADE ON UPDATE CASCADE;      
+
+ALTER TABLE `variazione`
+	ADD FOREIGN KEY(`CodiceTragitto`) REFERENCES `tragitto`(`CodiceTragitto`)
+		ON DELETE CASCADE ON UPDATE CASCADE,
+	ADD FOREIGN KEY(`IDPool`) REFERENCES `pool`(`IDPool`)
+		ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `posizione`
+	ADD FOREIGN KEY(`CodiceTragitto`) REFERENCES `tragitto`(`CodiceTragitto`)
+		ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `chilometro`
+	ADD FOREIGN KEY(`IDStrada`) REFERENCES `strada`(`IDStrada`)
+		ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `proponente`
+	ADD FOREIGN KEY(`CodFiscale`) REFERENCES `utente`(`CodFiscale`)
+		ON DELETE CASCADE ON UPDATE CASCADE;
+        
+ALTER TABLE `autovettura`
+	ADD FOREIGN KEY(`CodiceProponente`) REFERENCES `proponente`(`CodiceProponente`)
+		ON DELETE CASCADE ON UPDATE CASCADE,
+	ADD FOREIGN KEY(`NomeModello`) REFERENCES `modello`(`NomeModello`)
+		ON DELETE NO ACTION ON UPDATE CASCADE;
+
+ALTER TABLE `chiamatasharing`
+	ADD FOREIGN KEY(`CodiceFruitore`) REFERENCES `fruitore`(`CodiceFruitore`)
+		ON DELETE NO ACTION ON UPDATE CASCADE;
+
+ALTER TABLE `incidente`
+	ADD FOREIGN KEY(`IDNoleggio`) REFERENCES `noleggio`(`IDNoleggio`)
+		ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `prenotazionep`
+	ADD FOREIGN KEY(`IDPool`) REFERENCES `pool`(`IDPool`)
+		ON DELETE CASCADE ON UPDATE CASCADE,
+	ADD FOREIGN KEY(`CodiceFruitore`) REFERENCES `fruitore`(`CodiceFruitore`)
+		ON DELETE NO ACTION ON UPDATE CASCADE;
+
+ ALTER TABLE `relativa`
+ 	ADD FOREIGN KEY(`IDStrada`, `Numero`) REFERENCES `chilometro`(`IDStrada`, `Numero`)
+ 		ON DELETE CASCADE ON UPDATE CASCADE,
+ 	ADD FOREIGN KEY(`IDPosizione`) REFERENCES `posizione`(`IDPosizione`)
+ 		ON DELETE CASCADE ON UPDATE CASCADE;
+
+ ALTER TABLE `intersezione`
+ 	ADD FOREIGN KEY(`IDStrada2`, `Numero2`) REFERENCES `chilometro`(`IDStrada`, `Numero`)
+ 		ON DELETE CASCADE ON UPDATE CASCADE,
+ 	ADD FOREIGN KEY(`IDStrada1`, `Numero1`) REFERENCES `chilometro`(`IDStrada`, `Numero`)
+ 		ON DELETE CASCADE ON UPDATE CASCADE;
+  
